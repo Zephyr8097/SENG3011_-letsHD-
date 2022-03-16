@@ -1,0 +1,9 @@
+# mysql的配置参数
+mysql:
+  user: "admin"
+  password: "letsgethd"
+  port: 3306
+  host: "database-1.ctn2lesi9qqn.us-east-1.rds.amazonaws.com"
+  db: "practice"
+  charset: "utf8"
+limit: 50000
