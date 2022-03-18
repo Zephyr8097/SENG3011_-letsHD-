@@ -1,0 +1,133 @@
+openapi: 3.0.1
+info:
+  title: SENG3011 LetsHD API
+  description: This the Swagger documentation for our API services
+  version: 1.0.0
+externalDocs:
+  description: Visit our confluence pages for other documentation
+  url: https://unswseng.atlassian.net/wiki/spaces/SE3Y22G18/pages/2397671/Documentation
+
+servers:
+  - url: http://18.188.162.122:8080/
+
+
+paths:
+  ######################## AUTH ############################
+  /reports:
+    get:
+      summary: retrieve the relevant reports from conditions
+      parameters:
+        - name: start_date
+          in: query
+          description: start date of the interested period
+          required: true
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: end date of the interested period
+          required: true
+          schema:
+            type: string
+        - name: keyterms
+          in: query
+          description: name of the outbreak user wish to search for
+          required: true
+          schema:
+            type: string
+            example: "Adverse"
+        - name: location
+          in: query
+          description: location of the outbreak user wish to search for
+          required: true
+          schema:
+            type: string
+            example: "Australia Sydney"
+      responses:
+        200:
+          description: Successfully found related reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Authentication tokens
+                    type: number
+                    example: 0
+                  headline:
+                    description: User information
+                    type: string
+                    example: Current outbreak around costal area of Sydney
+                  date_of_publication:
+                    description: A string indicating the publication date
+                    type: string
+                  url:
+                    description: URL of the reports found
+                    type: string
+                  main_text:
+                    description: Main body of the report found
+                    type: string
+                  reports:
+                    description: A collection of reports
+                    type: array
+                    items:
+                      type: object
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                
+  /reports_keyterm/{key_term}:
+    get:
+      summary: retrieve reports related to a certain keyword
+      parameters:
+        - name: key_term
+          in: path
+          description: name of the outbreak user wish to search for
+          required: true
+          schema:
+            type: string
+            example: "Adverse"
+      responses:
+        200:
+          description: Successfully found related reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Authentication tokens
+                    type: number
+                    example: 0
+                  headline:
+                    description: User information
+                    type: string
+                    example: Current outbreak around costal area of Sydney
+                  date_of_publication:
+                    description: A string indicating the publication date
+                    type: string
+                  url:
+                    description: URL of the reports found
+                    type: string
+                  main_text:
+                    description: Main body of the report found
+                    type: string
+                  reports:
+                    description: A collection of reports
+                    type: array
+                    items:
+                      type: object
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+
+  
+
+
