@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 import re
 from datetime import datetime
 import mysql.connector
-import secrets
+
 import json
 import time
 
@@ -216,6 +216,8 @@ class Reports_date(Resource):
 api.add_resource(Reports_date, "/reports_date/<string:date_start>/<string:date_end>")
 
 
+
+
 class Reports_combine(Resource):
     def get(self, key_term, place):
         fit_reports = filter_keyterm(key_term, reports)
@@ -237,7 +239,7 @@ class Reports(Resource):
 api.add_resource(Reports, "/reports")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=80)
 
 
 
