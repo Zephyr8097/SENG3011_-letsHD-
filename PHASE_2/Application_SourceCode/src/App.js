@@ -20,7 +20,7 @@ function App() {
           <Route path={ROUTES.RESULT} element={<ROUTES.Result />} />
           <Route
             exact
-            spath="/"
+            path="/"
             element={<Navigate replace to={ROUTES.HOME} />}
           />
         </Routes>

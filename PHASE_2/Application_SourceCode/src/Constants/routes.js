@@ -4,4 +4,4 @@ export { default as Result } from "../Pages/Result";
 
 // Define the path name for each component
 export const HOME = "/home";
-export const RESULT = "/result";
+export const RESULT = "/result/:start/:end/:country/:city/:keyword";

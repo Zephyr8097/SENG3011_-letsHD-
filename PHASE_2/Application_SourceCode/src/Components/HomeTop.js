@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import TextField from "@mui/material/TextField";
 // Importing configs
 import * as ROUTES from "../Constants/routes";
@@ -47,12 +47,25 @@ const Slogan2 = styled.div`
   margin-left: -50px;
 `;
 
+const pop = keyframes`
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transforom: scale(0.8); }
+`;
+
 const Expandprompt = styled.div`
   margin-top: auto;
   margin-bottom: 20px;
-  color: lightgrey;
+  color: #f1dbdb;
   font-size: 20;
   font-weight: 400;
+  animation-name: ${pop};
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  opacity: 0.6;
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 // Below expanded styled componenets
@@ -133,7 +146,6 @@ const ExpandedHomeTop = () => {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [keyword, setKeyword] = useState("");
-
   const [validEnd, setValidEnd] = useState(true);
   // update validEnd date var when a new end date is chosen
   useEffect(() => {
@@ -252,7 +264,7 @@ const ExpandedHomeTop = () => {
         </SearchField>
       </SearchFieldContainer>
       <SearchBtnWrapper>
-        <Link to={ROUTES.RESULT}>
+        <Link to={`/result/${start}/${end}/${country}/${city}/${keyword}`}>
           <SearchBtn onClick={() => {}}>Search</SearchBtn>
         </Link>
       </SearchBtnWrapper>
