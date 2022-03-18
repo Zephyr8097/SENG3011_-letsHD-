@@ -1,25 +1,41 @@
 #from asyncio.windows_events import NULL
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask import request
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
+
 import re
 from datetime import datetime
-import pymysql
+import mysql.connector
 import secrets
+import json
+import time
 
 
 # create and configure the app
-conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format('admin', 'letsgethd', 'database-1.ctn2lesi9qqn.us-east-1.rds.amazonaws.com', 'backup')
+#conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format('admin', 'letsgethd', 'database-1.ctn2lesi9qqn.us-east-1.rds.amazonaws.com', 'backup')
 app = Flask(__name__, instance_relative_config=True)
 api = Api(app)
 
-app.config['SECRET_KEY'] = 'SuperSecretKey'
-app.config['SQLALCHEMY_DATABASE_URI'] = conn
-db = SQLAlchemy(app)
+#app.config['SECRET_KEY'] = 'SuperSecretKey'
+#app.config['SQLALCHEMY_DATABASE_URI'] = conn
+#db = SQLAlchemy(app)
+
+
+db = mysql.connector.connect(
+    host='database-1.ctn2lesi9qqn.us-east-1.rds.amazonaws.com', 
+    user="admin",
+    passwd="letsgethd",
+    database="backup"       
+)
+mycursor = db.cursor()
+#mycursor.execute("select * from article")
+
+#print(type(mycursor))
+
 
 '''
 app.config.from_mapping(
@@ -41,11 +57,12 @@ try:
 except OSError:
     pass
 
-'''
-@app.route("/hello")
-def hello_world(): 
-    return "<p>Hello, World!</p>"
 
+@app.route("/")
+def hello_world(): 
+    return "<p>Wellcome!</p>"
+
+'''
 @app.route('/result', methods=['GET', 'POST'])
 def get_name():
     if request.method == 'POST':
@@ -60,28 +77,10 @@ def getnumoffans():
     else:   
         return dict(name='lamchi', fans='100000')
 '''
-resource_fields = {
-        'id': fields.Integer,
-        'url': fields.String,
-        'date_of_publiction': fields.String,
-        'headline': fields.String,
-        'main_text': fields.String, 
-        'reports': fields.String
-}
 
 
-class Article(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(100))
-    date_of_publication = db.Column(db.String(100))
-    headline = db.Column(db.String(100))
-    main_text = db.Column(db.String(100))
-    reports = db.Column(db.String(100))
 
-    def __repr__(self):
-        return f"Article(url = {url}, date_of_publication = {date_of_publication}, headline = {headline}, main_text = {main_text}, reports = {reports})"
-        #return "id: {0} | url: {1} | date_of_publication: {2} | headline: {3} | main_text: {4} | reports: {5}".format(self.id, self.url, self.date_of_publication, self.headline, self.main_text, self.reports)
-##this part is just for test
+
 
 '''
 results = {"1": {"url": "www.cdc.com", "date": "2022-01006T00:00:00"}, "2": {"url": "www.google.com", "date": "2021-01006T00:00:00"}}
@@ -151,18 +150,70 @@ class Reports(Resource):
 api.add_resource(Reports, "/reports")
             
 '''
+# list 转成Json格式数据
+def listToJson(lst):
+    import json
+    import numpy as np
+    keys = [str(x) for x in np.arange(len(lst))]
+    list_json = dict(zip(keys, lst))
+    str_json = json.dumps(list_json, indent=2, ensure_ascii=False) 
+    return str_json
+
+
+
+
+def filter_keyterm(key_term):
+    fit_articles = []
+    if key_term is not None:
+        mycursor.execute("select * from article where headline like" + "'%" + key_term + "%'")
+        #mycursor.execute(f"select * from article where headline = '{key_term}'")
+        
+        for x in mycursor:
+            #fit_articles.append(x)  
+            article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
+            article_dict_json = json.dumps(article_dict, indent=6)
+            fit_articles.append(article_dict)
+        '''
+        print(fit_articles)  
+        '''
+    return fit_articles
+
+
+def filter_date_of_publiction(date_start, date_end):
+    fit_articles = []
+    mycursor.execute("select * from article where date_of_publication >" + "'%" + date_start + "%'" +"and date_of_publication <" + "'%" + date_end + "%'")
+    for x in mycursor:
+        #dp = time.strptime(x[2], "time%Y-%m-%d")
+        #ds = time.strptime(date_start, "time%Y-%m-%d")
+        #de = time.strptime(date_end, "time%Y-%m-%d")
+        #print(x)
+        article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
+        article_dict_json = json.dumps(article_dict, indent=6)
+        fit_articles.append(article_dict)
+    return fit_articles
+        
+
+
 
 class Reports_keyterm(Resource):
 
-    @marshal_with(resource_fields)
+    #@marshal_with(resource_fields)
     def get(self, key_term):
         #fit_reports = filter_keyterm(key_term, reports)
         #return fit_reports 
-        result = Article.query.get(url=key_term) 
+        #print(f"key_term is {key_term}")
+        result = filter_keyterm(key_term)
         return result 
 
 api.add_resource(Reports_keyterm, "/reports_keyterm/<string:key_term>")
 
+
+class Reports_date(Resource):
+    def get(self, date_start, date_end):
+        result = filter_date_of_publiction(date_start, date_end)
+        return result
+
+api.add_resource(Reports_date, "/reports_date/<string:date_start>/<string:date_end>")
 
 
 class Reports_combine(Resource):
@@ -173,7 +224,17 @@ class Reports_combine(Resource):
 
 api.add_resource(Reports_combine, "/reports/<string:key_term>/<string:place>")
 
+class Reports(Resource):
+    def get(self):
+        fit_articles = []
+        mycursor.execute("select * from article")
+        for x in mycursor:
+            article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
+            article_dict_json = json.dumps(article_dict, indent=6)
+            fit_articles.append(article_dict)
+        return fit_articles
 
+api.add_resource(Reports, "/reports")
 
 if __name__ == "__main__":
     app.run(debug=True)
