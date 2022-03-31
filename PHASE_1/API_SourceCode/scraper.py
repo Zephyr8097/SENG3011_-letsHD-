@@ -33,9 +33,9 @@ for word in string.ascii_lowercase:
                 #print(item)
                 p1 = re.compile(r'[(](.*?)[)]', re.S)
                 if len(report_content.split("\"")) > 3:
-                    report_link = '"' + str(report_content.split("\"")[3]) + '"'
+                    report_link = str(report_content.split("\"")[3]) 
                 else:
-                    report_link = '"' + str(report_content.split("\"")[1]) + '"'
+                    report_link = str(report_content.split("\"")[1]) 
                 #report_description = report_content.split("\"")[-1].split('\>')[0]
                 #get report_descritption
                 patternStr = r'%s(.+?)%s'%('\>', '\<')
@@ -44,10 +44,24 @@ for word in string.ascii_lowercase:
                 report_description = '"' + str(m.group(1)) + '"'
                 print(f'report_description: {report_description}')
                 print(f'report_link: {report_link}')
-                sql = 'insert into article(url, headline) values(' +  report_description+', '+ report_link + ')'
+                #sql = 'insert into article(url, headline) values(' +  report_description+ ', ' + '"' + report_link + '"' + ')'
+                #mysql.exe(sql)
+
+                html_text_2 = requests.get(report_link).text
+                soup_2 = BeautifulSoup(html_text_2, 'lxml')
+                pb_2 = soup_2.find('div', class_="col last-reviewed").text
+                #print(pb)
+                date_of_publication = str(pb_2).split(':')[1].split('Content')[0].lstrip()
+                print(f'date_of_publication: {date_of_publication}')
+                #sql = 'insert into article(date_of_publication) values(' + '"' + tmp + '"' + ')'
+                sql = 'insert into article(url, headline, date_of_publication) values(' +  report_description+ ', ' + '"' + report_link + '"' + ', ' + '"' + date_of_publication + '"' + ')'
                 mysql.exe(sql)
             except:
                 continue
+            
+            
+            
+
 sql = "select * from article"      
 result = mysql.exe(sql)
 print(result)
