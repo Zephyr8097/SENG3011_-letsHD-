@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 // Import components and path
 import * as ROUTES from "./Constants/routes";
+import Navbar from "./Components/Navbar";
 
 const Home = styled.div`
   position: absolute;
@@ -15,9 +16,12 @@ function App() {
   return (
     <Home>
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route exact path={ROUTES.HOME} element={<ROUTES.Home />} />
           <Route path={ROUTES.RESULT} element={<ROUTES.Result />} />
+          <Route path={ROUTES.COVIDCASE} element={<ROUTES.Covidcase />} />
+          <Route path={ROUTES.DISEASE} element={<ROUTES.Disease />} />
           <Route
             exact
             path="/"

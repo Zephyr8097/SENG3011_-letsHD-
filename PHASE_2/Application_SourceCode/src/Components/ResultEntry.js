@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
-import TextField from "@mui/material/TextField";
 // Import configs
 import * as CONFIG from "../Constants/config";
 
