@@ -8,9 +8,11 @@ from utils import mysql
 
 config = load_config()
 mysql = mysql(config['mysql'])
-sql = "select * from article"      
+sql = "select * from new_article"      
 result = mysql.exe(sql)
 print(result)
+#timeout_sql = "SET GLOBAL connect_timeout = 600"
+#result = mysql.exe(timeout_sql)
 
 
 for word in string.ascii_lowercase:
@@ -54,9 +56,11 @@ for word in string.ascii_lowercase:
                 date_of_publication = str(pb_2).split(':')[1].split('Content')[0].lstrip()
                 print(f'date_of_publication: {date_of_publication}')
                 #sql = 'insert into article(date_of_publication) values(' + '"' + tmp + '"' + ')'
-                sql = 'insert into article(url, headline, date_of_publication) values(' +  report_description+ ', ' + '"' + report_link + '"' + ', ' + '"' + date_of_publication + '"' + ')'
+                sql = 'insert into new_article(headline, url, date_of_publication) values(' +  report_description+ ', ' + '"' + report_link + '"' + ', ' + '"' + date_of_publication + '"' + ')'
                 mysql.exe(sql)
+                print("sth right happended")
             except:
+                print("sth wrong happended")
                 continue
             
             
