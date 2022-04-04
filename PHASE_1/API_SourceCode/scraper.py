@@ -66,7 +66,7 @@ for word in string.ascii_lowercase:
             
             
 
-sql = "select * from article"      
+sql = "select * from new_article"      
 result = mysql.exe(sql)
 print(result)
    
