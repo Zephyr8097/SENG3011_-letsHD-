@@ -181,7 +181,7 @@ def filter_keyterm(key_term):
 def covid_filter_country(country):
     fit_locations = []
     if country is not None:
-        mycursor.execute("select * from covid where headline like" + "'%" + country + "%'")
+        mycursor.execute("select * from covid where country like" + "'%" + country + "%'")
         for x in mycursor:
             location_dict = {'id': x[0], 'country': x[1], 'url': x[2], 'level': x[3]}
             #location_dict = json.dumps(location_dict, indent=4)
