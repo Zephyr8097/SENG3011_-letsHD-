@@ -49,9 +49,9 @@ class mysql:
         :param sql: sql语句
         """
         c = self.connection.cursor(cursor=pymysql.cursors.DictCursor)
-        self.connection.ping(reconnect=True)
+        #self.connection.ping(reconnect=True)
         c.execute(sql)
-        self.connection.commit()
+        #self.connection.commit()
 
     def rollback(self):
         """

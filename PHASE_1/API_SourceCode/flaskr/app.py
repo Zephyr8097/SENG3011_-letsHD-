@@ -178,6 +178,16 @@ def filter_keyterm(key_term):
         '''
     return fit_articles
 
+def covid_filter_country(country):
+    fit_locations = []
+    if country is not None:
+        mycursor.execute("select * from article where headline like" + "'%" + country + "%'")
+        for x in mycursor:
+            location_dict = {'id': x[0], 'country': x[1], 'url': x[2], 'level': x[3]}
+            #location_dict = json.dumps(location_dict, indent=4)
+            fit_locations.append(location_dict)
+    return fit_locations
+        
 
 def filter_date_of_publiction(date_start, date_end):
     fit_articles = []
@@ -207,6 +217,13 @@ class Reports_keyterm(Resource):
 
 api.add_resource(Reports_keyterm, "/reports_keyterm/<string:key_term>")
 
+
+class covid_suggestion(Resource):
+    def get(self, country):
+        result = covid_filter_country(country)
+        return result
+
+api.add_resource(covid_suggestion, "/covid/<string:country>")
 
 class Reports_date(Resource):
     def get(self, date_start, date_end):
