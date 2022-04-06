@@ -10,8 +10,15 @@ export const feedbackLink =
 // Axios config headers
 export const axiosHeader = {
   ContentType: "*",
+  "Access-Control-Allow-Origin": "*",
 };
 
 // API root URL
+// Our own backend API
+// 1) key_term/{key_term}
+// 2) covid/{country}
+export const BACKEND = "http://18.188.162.122:8080";
+// External public API
 export const COVID = "https://api.covid19api.com";
+// Other groups' API
 export const DISEASE = "https://seng3011-dwen.herokuapp.com/diseases";

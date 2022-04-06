@@ -5,6 +5,7 @@ import * as CONFIG from "../Constants/config";
 // Import icons
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import axios from "axios";
 
 const Entries = styled.div`
   position: relative;
@@ -42,6 +43,23 @@ const Header = styled.div`
 
 const DiseaseEntry = ({ name }) => {
   const [expand, setExpand] = useState(false);
+  const [info, setInfo] = useState({});
+  useEffect(async () => {
+    if (expand) {
+      const url = `${CONFIG.DISEASE}/${name}`;
+      const res = await axios.get(url, CONFIG.axiosHeader);
+      console.log(res);
+      setInfo(res.data);
+    }
+  }, [expand]);
+  const printArray = (arr) => {
+    if (arr === undefined) return "-";
+    var str = "";
+    arr.forEach((elem) => {
+      str = str + elem + ", ";
+    });
+    return str;
+  };
   return (
     <Entries style={{ height: expand ? "auto" : "25px" }}>
       <Top>
@@ -53,9 +71,9 @@ const DiseaseEntry = ({ name }) => {
       {expand ? (
         <Bottom>
           <Header>Syndromes:</Header>
-          <div>Fever, Headache, Sore throat</div>
+          <div>{info === {} ? "loading..." : printArray(info.syndromes)}</div>
           <Header>Locations:</Header>
-          <div>xyz, xyz</div>
+          <div>{info === {} ? "loading..." : printArray(info.locations)}</div>
         </Bottom>
       ) : null}
     </Entries>

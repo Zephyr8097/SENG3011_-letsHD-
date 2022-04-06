@@ -22,6 +22,7 @@ function App() {
           <Route path={ROUTES.RESULT} element={<ROUTES.Result />} />
           <Route path={ROUTES.COVIDCASE} element={<ROUTES.Covidcase />} />
           <Route path={ROUTES.DISEASE} element={<ROUTES.Disease />} />
+          <Route path={ROUTES.RISKRANK} element={<ROUTES.RiskRank />} />
           <Route
             exact
             path="/"

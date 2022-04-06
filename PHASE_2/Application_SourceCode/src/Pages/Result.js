@@ -15,6 +15,7 @@ import LocationCityRoundedIcon from "@mui/icons-material/LocationCityRounded";
 import CoronavirusRoundedIcon from "@mui/icons-material/CoronavirusRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
+import axios from "axios";
 
 const HomeWrapper = styled.div`
   position: relative;
@@ -108,9 +109,78 @@ const Result = ({}) => {
   const [keyword, setKeyword] = useState(params.keyword);
   const [validEnd, setValidEnd] = useState(true);
   const [scrolled, setScrolled] = useState(0);
-
+  //
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    /*const url = CONFIG.BACKEND + "report_keyterm/" + keyword;
+    axios
+      .get(url, CONFIG.axiosHeader)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));*/
+    setData([
+      {
+        id: 12,
+        headline: "ACE (Adverse Childhood Experiences)",
+        date_of_publication: "April 2, 2021 ",
+        url: "https://www.cdc.gov/violenceprevention/aces/index.html",
+        main_text: null,
+        reports: [5],
+      },
+      {
+        id: 31,
+        headline: "Adverse Childhood Experiences (ACE)",
+        date_of_publication: "April 2, 2021 ",
+        url: "https://www.cdc.gov/violenceprevention/aces/index.html",
+        main_text: null,
+        reports: [5],
+      },
+      {
+        id: 32,
+        headline: "Adverse Drug Events \u2014 see Medication Safety",
+        date_of_publication: "June 13, 2014 ",
+        url: "https://www.cdc.gov/medicationsafety/",
+        main_text: null,
+        reports: [5],
+      },
+      {
+        id: 33,
+        headline:
+          "Adverse Events Following Immunization \u2014 see Vaccine Adverse Event Reporting System",
+        date_of_publication: "November 2, 2021 ",
+        url: "https://www.cdc.gov/vaccinesafety/ensuringsafety/monitoring/vaers/index.html",
+        main_text: null,
+        reports: [5],
+      },
+      {
+        id: 1588,
+        headline:
+          "Reporting Vaccine Reactions \u2014 see Vaccine Adverse Event Reporting System",
+        date_of_publication: "November 2, 2021 ",
+        url: "https://www.cdc.gov/vaccinesafety/ensuringsafety/monitoring/vaers/index.html",
+        main_text: null,
+        reports: [5],
+      },
+      {
+        id: 1938,
+        headline: "Vaccine Adverse Event Reporting System (VAERS)",
+        date_of_publication: "November 2, 2021 ",
+        url: "https://www.cdc.gov/vaccinesafety/ensuringsafety/monitoring/vaers/index.html",
+        main_text: null,
+        reports: [5],
+      },
+      {
+        id: 1955,
+        headline: "VAERS (Vaccine Adverse Event Reporting System)",
+        date_of_publication: "November 2, 2021 ",
+        url: "https://www.cdc.gov/vaccinesafety/ensuringsafety/monitoring/vaers/index.html",
+        main_text: null,
+        reports: [5],
+      },
+    ]);
+  }, []);
   const handleScroll = () => {
-    console.log(window.scrollY);
     setScrolled(window.pageYOffset);
   };
 
@@ -237,16 +307,21 @@ const Result = ({}) => {
           </SearchField>
         </TextInput>
       </Banner>
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
-      <ResultEntry />
+
+      {data === [] ? null : (
+        <>
+          {data.map((elem) => {
+            return (
+              <ResultEntry
+                headline={elem.headline}
+                date={elem.date_of_publication}
+                url={elem.url}
+                reports={elem.reports}
+              />
+            );
+          })}
+        </>
+      )}
 
       <Home>
         <Link to={ROUTES.HOME}>

@@ -8,8 +8,25 @@ const Wrapper = styled.div`
   flex-direction: row;
   width: 100%;
   height: 70px;
-  justify-content: flex-end;
+  justify-content: space-between;
   background-color: ${CONFIG.primaryColor};
+`;
+
+const Left = styled.div`
+  padding-top: 20px;
+  padding-left: 10px;
+  width: 30%;
+  font-size: 23px;
+  font-weight: bold;
+  font-style: italic;
+  color: ${CONFIG.secondaryColor};
+`;
+
+const Right = styled.div`
+  width: 70%;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
 `;
 
 const Features = styled.div`
@@ -31,15 +48,22 @@ const Features = styled.div`
 const Navbar = () => {
   return (
     <Wrapper>
-      <Link to={`/covidcase`} style={{ textDecoration: "none" }}>
-        <Features>Covid Cases</Features>
-      </Link>
-      <Link to={`/disease`} style={{ textDecoration: "none" }}>
-        <Features>Diseasae Info</Features>
-      </Link>
-      <Link to={`/`} style={{ textDecoration: "none" }}>
-        <Features>Home</Features>
-      </Link>
+      <Left>Search for Safety</Left>
+
+      <Right>
+        <Link to={`/riskrank`} style={{ textDecoration: "none" }}>
+          <Features>Risk Ranking</Features>
+        </Link>
+        <Link to={`/covidcase`} style={{ textDecoration: "none" }}>
+          <Features>Covid Cases</Features>
+        </Link>
+        <Link to={`/disease`} style={{ textDecoration: "none" }}>
+          <Features>Diseasae Info</Features>
+        </Link>
+        <Link to={`/`} style={{ textDecoration: "none" }}>
+          <Features>Home</Features>
+        </Link>
+      </Right>
     </Wrapper>
   );
 };

@@ -38,6 +38,22 @@ const Filter = styled.input`
   border: 1px solid transparent;
 `;
 
+const Declaration = styled.div`
+  margin-top: 10px;
+  display: flex;
+  width: 80%;
+  flex-direction: row;
+`;
+
+const Category = styled.div`
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 25%;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+`;
+
 const Covidcase = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState([]);
@@ -65,6 +81,14 @@ const Covidcase = () => {
           handleFilter(event.target.value.toLowerCase());
         }}
       />
+      <Declaration>
+        <Category style={{ backgroundColor: "lightgrey" }}>
+          Location (Country)
+        </Category>
+        <Category style={{ backgroundColor: "#e9c5ca" }}>New Confirm</Category>
+        <Category style={{ backgroundColor: "#b8b9d8" }}>New Death</Category>
+        <Category style={{ backgroundColor: "#a5c8a5" }}>New Recover</Category>
+      </Declaration>
       {data === [] ? null : (
         <>
           {filter.map((elem) => {
