@@ -1,4 +1,3 @@
-#from asyncio.windows_events import NULL
 import os
 
 from flask import Flask, render_template
@@ -178,6 +177,15 @@ def filter_keyterm(key_term):
         '''
     return fit_articles
 
+def covid_all_countries():
+    ranking = []
+    mycursor.execute("select * from covid")
+    for x in mycursor:
+        print(f"x[1] is {x[1]}")
+        ranking_dict = {'Country': x[1], 'level': x[3]}
+        ranking.append(ranking_dict)
+    return ranking
+
 def covid_filter_country(country):
     fit_locations = []
     if country is not None:
@@ -217,6 +225,13 @@ class Reports_keyterm(Resource):
 
 api.add_resource(Reports_keyterm, "/reports_keyterm/<string:key_term>")
 
+
+class covid_ranking(Resource):
+    def get(self):
+        result = covid_all_countries()
+        return result
+
+api.add_resource(covid_ranking, "/covid")
 
 class covid_suggestion(Resource):
     def get(self, country):
