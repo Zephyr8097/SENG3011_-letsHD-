@@ -12,12 +12,15 @@ import mysql.connector
 
 import json
 import time
+from flask_cors import CORS
 
 
 # create and configure the app
 #conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format('admin', 'letsgethd', 'database-1.ctn2lesi9qqn.us-east-1.rds.amazonaws.com', 'backup')
 app = Flask(__name__, instance_relative_config=True)
+CORS(app, resources=r'/*')
 api = Api(app)
+
 
 #app.config['SECRET_KEY'] = 'SuperSecretKey'
 #app.config['SQLALCHEMY_DATABASE_URI'] = conn
