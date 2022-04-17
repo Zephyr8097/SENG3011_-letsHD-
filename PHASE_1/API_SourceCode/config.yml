@@ -1,4 +1,4 @@
-# mysql的配置参数
+# mysql setting para
 mysql:
   user: "admin"
   password: "letsgethd"

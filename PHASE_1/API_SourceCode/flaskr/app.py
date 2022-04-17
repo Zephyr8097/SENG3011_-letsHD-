@@ -200,10 +200,16 @@ def covid_filter_country(country):
     return fit_locations
         
 
-def filter_date_of_publiction(date_start, date_end):
+def filter_date_of_publiction():
+    spd = {"January": "1", "Febuary": "2",  }
     fit_articles = []
-    mycursor.execute("select * from article where date_of_publication >" + "'%" + date_start + "%'" +"and date_of_publication <" + "'%" + date_end + "%'")
+    #mycursor.execute("select * from article where date_of_publication >" + "'%" + date_start + "%'" +"and date_of_publication <" + "'%" + date_end + "%'")
+    mycursor.execute("select * from article")
     for x in mycursor:
+        dbm = x[2].split(" ")[0]
+        dby = x[2].split(" ")[2]
+        dbd = x[2].split(" ")[1].split(",")[0]
+        print(f"month is {dbm}; year is {dby}; date is {dbd}")
         #dp = time.strptime(x[2], "time%Y-%m-%d")
         #ds = time.strptime(date_start, "time%Y-%m-%d")
         #de = time.strptime(date_end, "time%Y-%m-%d")
@@ -244,11 +250,11 @@ class covid_suggestion(Resource):
 api.add_resource(covid_suggestion, "/covid/<string:country>")
 
 class Reports_date(Resource):
-    def get(self, date_start, date_end):
-        result = filter_date_of_publiction(date_start, date_end)
+    def get(self):
+        result = filter_date_of_publiction()
         return result
 
-api.add_resource(Reports_date, "/reports_date/<string:date_start>/<string:date_end>")
+api.add_resource(Reports_date, "/reports_date")
 
 
 
