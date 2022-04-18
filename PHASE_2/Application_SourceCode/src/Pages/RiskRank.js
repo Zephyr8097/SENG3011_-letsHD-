@@ -64,8 +64,9 @@ const RiskRank = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState([]);
   useEffect(async () => {
-    const url = `${CONFIG.BACKEND}/covid/korea`;
+    const url = `${CONFIG.BACKEND}/covid`;
     const res = await axios.get(url, CONFIG.axiosHeader);
+    console.log(res.data);
     const temp = [
       {
         Country: "Bahrain",
@@ -98,10 +99,10 @@ const RiskRank = () => {
         Ranking: "4",
       },
     ];
-    setData(temp);
-    setFilter(temp);
-    //setData(res.data.Countries);
-    //setFilter(res.data.Countries);
+    //setData(temp);
+    //setFilter(temp);
+    setData(res.data);
+    setFilter(res.data);
   }, []);
 
   // Filter entries that contains user input
@@ -166,11 +167,7 @@ const RiskRank = () => {
         <>
           {filter.map((elem) => {
             return (
-              <RiskRankEntry
-                country={elem.Country}
-                risk={elem.Risk}
-                ranking={elem.Ranking}
-              />
+              <RiskRankEntry country={elem.Country} ranking={elem.level} />
             );
           })}
         </>

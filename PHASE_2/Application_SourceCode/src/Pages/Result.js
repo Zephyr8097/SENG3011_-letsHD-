@@ -111,14 +111,10 @@ const Result = ({}) => {
   const [scrolled, setScrolled] = useState(0);
   //
   const [data, setData] = useState([]);
-  useEffect(() => {
-    /*const url = CONFIG.BACKEND + "report_keyterm/" + keyword;
-    axios
-      .get(url, CONFIG.axiosHeader)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err));*/
+  useEffect(async () => {
+    const url = CONFIG.BACKEND + "/reports_keyterm/" + keyword;
+    const res = await axios.get(url, CONFIG.axiosHeader);
+    console.log(res.data);
     setData([
       {
         id: 12,
@@ -204,110 +200,6 @@ const Result = ({}) => {
   }, [end]);
   return (
     <HomeWrapper>
-      <Banner>
-        <DateInput>
-          <TextField
-            label="Starting date of your trip"
-            defaultValue={start}
-            onChange={(e) => {
-              setStart(e.target.value);
-            }}
-            type={"date"}
-            sx={{ minWidth: "45%" }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            required
-          />
-          <TextField
-            label="Ending date of your trip"
-            value={end}
-            onChange={(e) => {
-              setEnd(e.target.value);
-            }}
-            type={"date"}
-            sx={{ minWidth: "45%", marginTop: "30px" }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            disabled={start === ""}
-            helperText={
-              validEnd ? "" : "End date cannot come before start date"
-            }
-            error={!validEnd}
-            required
-          />
-        </DateInput>
-
-        <TextInput>
-          <SearchField>
-            <LanguageRoundedIcon
-              style={{
-                fontSize: 30,
-                marginTop: 14,
-                marginRight: "10px",
-                color: CONFIG.secondaryColor,
-              }}
-            />
-            <TextField
-              error={false}
-              value={country}
-              onChange={(e) => {
-                setCountry(e.target.value);
-              }}
-              label="The country you wish to travel"
-              placeholder="Austrailia"
-              sx={{ minWidth: "90%" }}
-              helperText=""
-              required
-            />
-          </SearchField>
-          <SearchField>
-            <LocationCityRoundedIcon
-              style={{
-                fontSize: 30,
-                marginTop: 14,
-                marginRight: "10px",
-                color: CONFIG.secondaryColor,
-              }}
-            />
-            <TextField
-              error={false}
-              value={city}
-              onChange={(e) => {
-                setCity(e.target.value);
-              }}
-              label="The city you wish to travel"
-              placeholder="Sydney"
-              sx={{ minWidth: "90%" }}
-              helperText=""
-              required
-            />
-          </SearchField>
-          <SearchField>
-            <CoronavirusRoundedIcon
-              style={{
-                fontSize: 30,
-                marginTop: 14,
-                marginRight: "10px",
-                color: CONFIG.secondaryColor,
-              }}
-            />
-            <TextField
-              error={false}
-              value={keyword}
-              onChange={(e) => {
-                setKeyword(e.target.value);
-              }}
-              label="Optional keyword"
-              placeholder="Covid-19"
-              sx={{ minWidth: "90%" }}
-              helperText=""
-            />
-          </SearchField>
-        </TextInput>
-      </Banner>
-
       {data === [] ? null : (
         <>
           {data.map((elem) => {

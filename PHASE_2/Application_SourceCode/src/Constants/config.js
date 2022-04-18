@@ -22,3 +22,8 @@ export const BACKEND = "http://18.188.162.122:8080";
 export const COVID = "https://api.covid19api.com";
 // Other groups' API
 export const DISEASE = "https://seng3011-dwen.herokuapp.com/diseases";
+// Geocoder API
+export const GEO = "https://maps.googleapis.com/maps/api/geocode/json?";
+
+// Geocoding API key
+export const GeoKey = "AIzaSyCm7uCvmCdq4tc6n7OMVDk51rkwSvM8G1g";

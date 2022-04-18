@@ -34,25 +34,26 @@ const Ranking = styled.div`
 
 const checkRisk = (ranking) => {
   switch (ranking) {
-    case "0":
+    case "Level 1: COVID-19 Low":
       return <Ranking style={{ backgroundColor: "#d8d826" }}>Low</Ranking>;
-    case "1":
+    case "Level 2: COVID-19 Moderate":
       return <Ranking style={{ backgroundColor: "orange" }}>Moderate</Ranking>;
-    case "2":
+    case "Level 3: COVID-19 High":
       return <Ranking style={{ backgroundColor: "red" }}>High</Ranking>;
-    case "3":
+    case "Level 4: COVID-19 Very High":
       return <Ranking style={{ backgroundColor: "brown" }}>Vert High</Ranking>;
     default:
       return <Ranking style={{ backgroundColor: "grey" }}>Unkown</Ranking>;
   }
 };
 
-const RiskRankEntry = ({ country, risk, ranking }) => {
+const RiskRankEntry = ({ country, ranking }) => {
+  const fixCountry = (name) => {
+    return name.substring(1, name.length - 1);
+  };
   return (
     <Entries>
-      <Left>
-        {country}: &nbsp; {risk}
-      </Left>
+      <Left>{fixCountry(country)}</Left>
       <Right>{checkRisk(ranking)}</Right>
     </Entries>
   );
