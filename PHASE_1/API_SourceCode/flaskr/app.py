@@ -180,6 +180,18 @@ def filter_keyterm(key_term):
         '''
     return fit_articles
 
+def filter_location(location):
+    fit_articles = []
+    if location is not None:
+        mycursor.execute("select * from article where main_text like" + "'%" + location + "%'")
+        for x in mycursor:
+            #fit_articles.append(x)  
+            article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
+            article_dict_json = json.dumps(article_dict, indent=6)
+            fit_articles.append(article_dict)
+    
+    return fit_articles
+
 def covid_all_countries():
     ranking = []
     mycursor.execute("select * from covid")
@@ -235,6 +247,20 @@ class Reports_keyterm(Resource):
 api.add_resource(Reports_keyterm, "/reports_keyterm/<string:key_term>")
 
 
+class Reports_location(Resource):
+
+    #@marshal_with(resource_fields)
+    def get(self, location):
+        #fit_reports = filter_keyterm(key_term, reports)
+        #return fit_reports 
+        #print(f"key_term is {key_term}")
+        result = filter_location(location)
+        return result 
+
+api.add_resource(Reports_location, "/reports_location/<string:location>")
+
+
+
 class covid_ranking(Resource):
     def get(self):
         result = covid_all_countries()
@@ -270,7 +296,7 @@ api.add_resource(Reports_combine, "/reports/<string:key_term>/<string:place>")
 class Reports(Resource):
     def get(self):
         fit_articles = []
-        mycursor.execute("select * from article")
+        mycursor.execute("select * from article_d4")
         for x in mycursor:
             article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
             article_dict_json = json.dumps(article_dict, indent=6)
