@@ -183,7 +183,19 @@ def filter_keyterm(key_term):
 def filter_location(location):
     fit_articles = []
     if location is not None:
-        mycursor.execute("select * from article where main_text like" + "'%" + location + "%'")
+        mycursor.execute("select * from new_article_d4 where main_text like" + "'%" + location + "%'")
+        for x in mycursor:
+            #fit_articles.append(x)  
+            article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
+            article_dict_json = json.dumps(article_dict, indent=6)
+            fit_articles.append(article_dict)
+    
+    return fit_articles
+
+def filter_location_keyterm(location, keyterm):
+    fit_articles = []
+    if location is not None:
+        mycursor.execute("select * from new_article_d4 where main_text like" + "'%" + location + "%'" + "and headline like" + "'%" + keyterm + "%'")
         for x in mycursor:
             #fit_articles.append(x)  
             article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
@@ -258,6 +270,18 @@ class Reports_location(Resource):
         return result 
 
 api.add_resource(Reports_location, "/reports_location/<string:location>")
+
+class Reports_location_keyterm(Resource):
+
+    #@marshal_with(resource_fields)
+    def get(self, location, keyterm):
+        #fit_reports = filter_keyterm(key_term, reports)
+        #return fit_reports 
+        #print(f"key_term is {key_term}")
+        result = filter_location_keyterm(location, keyterm)
+        return result 
+
+api.add_resource(Reports_location_keyterm, '/reports_location_keyterm/<string:location>/<string:keyterm>')
 
 
 
