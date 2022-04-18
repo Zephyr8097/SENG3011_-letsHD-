@@ -58,7 +58,7 @@ for word in string.ascii_lowercase:
                 #sql = 'insert into article(date_of_publication) values(' + '"' + tmp + '"' + ')'
                 sql = 'insert into new_article_d4 (headline, url, date_of_publication) values(' +  report_description+ ', ' + '"' + report_link + '"' + ', ' + '"' + date_of_publication + '"' + ')'
                 mysql.exe(sql)
-                print("sth right happended")
+                print("write into new_article_d4")
             except:
                 print("sth wrong happended")
                 continue
