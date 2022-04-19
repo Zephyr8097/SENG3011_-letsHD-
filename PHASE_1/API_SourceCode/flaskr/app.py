@@ -175,6 +175,13 @@ def filter_keyterm(key_term):
             article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
             article_dict_json = json.dumps(article_dict, indent=6)
             fit_articles.append(article_dict)
+        
+        mycursor.execute("select * from new_article_d4 where headline like" + "'%" + key_term + "%'")
+        for x in mycursor:
+            #fit_articles.append(x)  
+            article_dict = {'id': x[0], 'headline': x[1], 'date_of_publication': x[2], 'url': x[3], 'main_text': x[4], 'reports': [5]}
+            article_dict_json = json.dumps(article_dict, indent=6)
+            fit_articles.append(article_dict)
         '''
         print(fit_articles)  
         '''
