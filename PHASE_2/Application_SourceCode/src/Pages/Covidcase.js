@@ -57,12 +57,29 @@ const Category = styled.div`
 const Covidcase = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState([]);
+  const [chosen, setChosen] = useState("location"); // stores user filter option either location || confirm || death || recover
+  var original;
   useEffect(async () => {
     const url = `${CONFIG.COVID}/summary`;
     const res = await axios.get(url, CONFIG.axiosHeader);
+    original = res.data.Countries;
     setData(res.data.Countries);
     setFilter(res.data.Countries);
   }, []);
+
+  // Filter according to user preferences
+  const handleFilterType = (type) => {
+    console.log(data);
+    if (type === "location") {
+      setFilter(data);
+    } else if (type === "confirm") {
+      setFilter(filter.sort((a, b) => b.NewConfirmed - a.NewConfirmed));
+    } else if (type === "death") {
+      setFilter(filter.sort((a, b) => b.NewDeaths - a.NewDeaths));
+    } else if (type === "recover") {
+      setFilter(filter.sort((a, b) => b.NewRecovered - a.NewRecovered));
+    }
+  };
 
   // Filter entries that contains user input
   const handleFilter = (input) => {
@@ -72,6 +89,7 @@ const Covidcase = () => {
     });
     setFilter(filtered);
   };
+
   return (
     <Wrapper>
       <Header>Covid Daily Updates</Header>
@@ -82,12 +100,57 @@ const Covidcase = () => {
         }}
       />
       <Declaration>
-        <Category style={{ backgroundColor: "lightgrey" }}>
+        <Category
+          style={{
+            backgroundColor: "lightgrey",
+            border:
+              chosen === "location" ? `2px solid ${CONFIG.primaryColor}` : "",
+          }}
+        >
           Location (Country)
         </Category>
-        <Category style={{ backgroundColor: "#e9c5ca" }}>New Confirm</Category>
-        <Category style={{ backgroundColor: "#b8b9d8" }}>New Death</Category>
-        <Category style={{ backgroundColor: "#a5c8a5" }}>New Recover</Category>
+
+        <Category
+          style={{
+            backgroundColor: "#e9c5ca",
+            border:
+              chosen === "confirm" ? `2px solid ${CONFIG.primaryColor}` : "",
+          }}
+          onClick={() => {
+            setChosen("confirm");
+            handleFilterType("confirm");
+          }}
+        >
+          New Confirm
+        </Category>
+
+        <Category
+          style={{
+            backgroundColor: "#b8b9d8",
+            border:
+              chosen === "death" ? `2px solid ${CONFIG.primaryColor}` : "",
+          }}
+          onClick={() => {
+            setChosen("death");
+            handleFilterType("death");
+          }}
+        >
+          New Death
+        </Category>
+
+        <Category
+          style={{
+            backgroundColor: "#a5c8a5",
+            border:
+              chosen === "recover" ? `2px solid ${CONFIG.primaryColor}` : "",
+          }}
+          onClick={() => {
+            setChosen("recover");
+            handleFilterType("recover");
+          }}
+        >
+          New Recover
+        </Category>
       </Declaration>
       {data === [] ? null : (
         <>

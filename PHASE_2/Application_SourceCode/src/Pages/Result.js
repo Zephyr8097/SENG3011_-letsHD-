@@ -33,52 +33,6 @@ const HomeWrapper = styled.div`
   }
 `;
 
-// None of the css for webkit-scrollbar is working atm, dunno why
-
-const Banner = styled.div`
-  background-color: ${CONFIG.primaryColor};
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 220px;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-`;
-
-const DateInput = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 25%;
-  height: 100%;
-`;
-
-const TextInput = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 75%;
-  height: 100%;
-`;
-
-const SearchField = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: auto;
-  border-radius: 20px;
-  padding: 10px;
-`;
-
-const EntryDisplay = styled.div`
-  position: relative;
-  width: 100%;
-  height: auto;
-`;
-
 const Home = styled.div`
   position: fixed;
   bottom: 25px;
@@ -100,6 +54,24 @@ const Top = styled.div`
   height: 56px;
 `;
 
+const Err = styled.div`
+  margin-top: 10px;
+  color: red;
+  font-size: 20px;
+`;
+
+const Other = styled.div`
+  margin-top: 10px;
+  width: 100%;
+  padding: 5px;
+  border-top: 2px solid ${CONFIG.primaryColor};
+  border-bottom: 2px solid ${CONFIG.primaryColor};
+  color: ${CONFIG.primaryColor};
+  font-size: 20px;
+  font-weight: 400;
+  text-align: center;
+`;
+
 const Result = ({}) => {
   const params = useParams();
   const [start, setStart] = useState(params.start);
@@ -111,11 +83,25 @@ const Result = ({}) => {
   const [scrolled, setScrolled] = useState(0);
   //
   const [data, setData] = useState([]);
+  const [other, setOther] = useState([]);
   useEffect(async () => {
-    const url = CONFIG.BACKEND + "/reports_keyterm/" + keyword;
+    const url =
+      CONFIG.BACKEND + "/reports_location_keyterm/" + country + "/" + keyword;
     const res = await axios.get(url, CONFIG.axiosHeader);
-    console.log(res.data);
-    setData([
+    const urlOther = CONFIG.BACKEND + "/reports_keyterm/" + keyword;
+    const resOther = await axios.get(urlOther, CONFIG.axiosHeader);
+    setData(
+      res.data.filter((elem) => {
+        console.log(elem.url);
+        return validTime(elem.url);
+      })
+    );
+    setOther(
+      resOther.data.filter((elem) => {
+        return validTime(elem.date_of_publication);
+      })
+    );
+    /* setData([
       {
         id: 12,
         headline: "ACE (Adverse Childhood Experiences)",
@@ -174,7 +160,7 @@ const Result = ({}) => {
         main_text: null,
         reports: [5],
       },
-    ]);
+    ]);*/
   }, []);
   const handleScroll = () => {
     setScrolled(window.pageYOffset);
@@ -198,9 +184,66 @@ const Result = ({}) => {
     if (e >= s) setValidEnd(true);
     else setValidEnd(false);
   }, [end]);
+
+  // Helper function to determine if a published data is inbetween certain timeframe
+  const validTime = (date) => {
+    // start || end => 2022-04-05
+    // date => January 24, 2014
+    const arr = date.split(",");
+    const monthDay = arr[0].split(" ");
+    const yRegex = /\d{4}/;
+    const y = yRegex.exec(arr[1]);
+    var month = 1;
+    const d = monthDay[1];
+    switch (month) {
+      case "January":
+        month = 1;
+        break;
+      case "February":
+        month = 2;
+        break;
+      case "March":
+        month = 3;
+        break;
+      case "April":
+        month = 4;
+        break;
+      case "May":
+        month = 5;
+        break;
+      case "June":
+        month = 6;
+        break;
+      case "July":
+        month = 7;
+        break;
+      case "August":
+        month = 8;
+        break;
+      case "September":
+        month = 9;
+        break;
+      case "October":
+        month = 10;
+        break;
+      case "November":
+        month = 11;
+        break;
+      case "December":
+        month = 12;
+        break;
+    }
+    const forged = `${y}-${month}-${d}`;
+    const forgedDate = new Date(forged);
+    console.log(forged);
+    if (forgedDate < new Date(end) && new Date(start) < forgedDate) return true;
+    return false;
+  };
   return (
     <HomeWrapper>
-      {data === [] ? null : (
+      {data.length === 0 ? (
+        <Err>No matching result found</Err>
+      ) : (
         <>
           {data.map((elem) => {
             return (
@@ -208,7 +251,29 @@ const Result = ({}) => {
                 headline={elem.headline}
                 date={elem.date_of_publication}
                 url={elem.url}
+                main={elem.main_text}
                 reports={elem.reports}
+                flip={true}
+              />
+            );
+          })}
+        </>
+      )}
+
+      {other.length === 0 ? (
+        <Err>No matching result found</Err>
+      ) : (
+        <>
+          <Other>Other reports you might be interested</Other>
+          {other.map((elem) => {
+            return (
+              <ResultEntry
+                headline={elem.headline}
+                date={elem.date_of_publication}
+                url={elem.url}
+                main={elem.main_text}
+                reports={elem.reports}
+                flip={false}
               />
             );
           })}

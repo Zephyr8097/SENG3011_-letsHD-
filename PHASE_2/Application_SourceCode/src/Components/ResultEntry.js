@@ -28,14 +28,17 @@ const Bottom = styled.div`
   padding-top: 5px;
 `;
 
-const ResultEntry = ({ headline, date, url, reports }) => {
+const ResultEntry = ({ headline, date, url, main, reports, flip }) => {
   return (
     <Wrapper>
       <Top>Title: {headline}</Top>
       <Bottom>
-        <div>Date of publication: {date}</div>
+        <div>Date of publication: {flip ? url : date}</div>
+        <br />
+        <div>{main}</div>
+        <br />
         <div>Reports: {reports}</div>
-        <a href={url}>More info available here</a>
+        <a href={flip ? date : url}>More info available here</a>
       </Bottom>
     </Wrapper>
   );
