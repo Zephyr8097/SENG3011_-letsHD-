@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import styled from "styled-components";
+// Routing imports
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+// Import components and path
+import * as ROUTES from "./Constants/routes";
+import Navbar from "./Components/Navbar";
+
+const Home = styled.div`
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Home>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route exact path={ROUTES.HOME} element={<ROUTES.Home />} />
+          <Route path={ROUTES.RESULT} element={<ROUTES.Result />} />
+          <Route path={ROUTES.COVIDCASE} element={<ROUTES.Covidcase />} />
+          <Route path={ROUTES.DISEASE} element={<ROUTES.Disease />} />
+          <Route path={ROUTES.RISKRANK} element={<ROUTES.RiskRank />} />
+          <Route
+            exact
+            path="/"
+            element={<Navigate replace to={ROUTES.HOME} />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </Home>
   );
 }
 
